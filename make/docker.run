@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "$@" | awk 'BEGIN{prefix=1;} ($0 ~ /^#/ || $1 ~ /^(ENV|LABEL|FROM|MAINTAINER|ARG|RUN)$/ ) {print;next} {if(prefix) printf("RUN ");print; prefix=($0 ~/\$/);}'
