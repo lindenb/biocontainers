@@ -1,0 +1,18 @@
+image: docker:stable
+
+stages:
+  - build
+
+services:
+  - docker:dind
+
+before_script:
+  - echo $CI_JOB_TOKEN | docker login --username gitlab-ci-token --password-stdin $CI_REGISTRY
+
+build:
+  stage: build
+  script:
+    - docker pull $CI_REGISTRY_IMAGE || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE --tag $CI_REGISTRY_IMAGE --build-arg http_proxy=${http_proxy} dockerfiles/bioinfo1.dockerfile
+    - docker push $CI_REGISTRY_IMAGE
+
